@@ -1,0 +1,130 @@
+/* =========================================================
+   PRIMAR — PRELOADER  (css/preloader.css)
+   Só usa transform / opacity / clip-path nas animações.
+   ---------------------------------------------------------
+   PERSONALIZAÇÃO RÁPIDA → edite as variáveis abaixo.
+   Velocidade, textos e etapas ficam em js/preloader.js (CONFIG).
+   ========================================================= */
+#preloader {
+  /* cores */
+  --pl-bg: #0a1230;            /* azul-marinho do palco */
+  --pl-bg-2: #131f4d;          /* centro do degradê */
+  --pl-yellow: #efc443;        /* fundação, brilho, barra */
+  --pl-red: #d6394b;           /* barra */
+  --pl-blue: #4a56e0;          /* planta (blueprint) e barra */
+  --pl-brick: #b4533a;         /* tijolos (terracota) */
+  --pl-text: rgba(255, 255, 255, .78);
+  /* tamanhos */
+  --pl-logo-w: clamp(250px, 46vw, 620px);   /* largura do logo */
+  --pl-scene-w: clamp(300px, 64vw, 680px);  /* largura da cena da obra */
+  --pl-bar-w: clamp(190px, 26vw, 260px);    /* largura da barra de progresso */
+
+  position: fixed; inset: 0; z-index: 300;
+  overflow: hidden;
+  pointer-events: all;
+  font-family: var(--font, "Montserrat", system-ui, sans-serif);
+  contain: layout paint;
+}
+
+/* ---------- Portas (revelam o site ao abrir na vertical) ---------- */
+.pl-door {
+  position: absolute; top: 0; bottom: 0; width: 50.2%;
+  background-image: radial-gradient(ellipse 70% 80% at 50% 50%, var(--pl-bg-2) 0%, var(--pl-bg) 100%);
+  background-size: 200% 100%;
+  will-change: transform;
+}
+.pl-door--l { left: 0; background-position: 0 0; }
+.pl-door--r { right: 0; background-position: 100% 0; }
+
+/* ---------- Palco ---------- */
+.pl-stage {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: clamp(18px, 3.4vh, 34px);
+  padding: 0 16px;
+}
+.pl-grid {  /* grade técnica sutil, aparece junto da planta */
+  position: absolute; inset: 0; opacity: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(120, 140, 255, .07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(120, 140, 255, .07) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: radial-gradient(ellipse 55% 50% at 50% 50%, #000 0%, transparent 100%);
+          mask-image: radial-gradient(ellipse 55% 50% at 50% 50%, #000 0%, transparent 100%);
+}
+
+/* cena + logo ocupam a mesma célula, centralizados um sobre o outro */
+.pl-center { position: relative; display: grid; place-items: center; }
+.pl-center > * { grid-area: 1 / 1; }
+
+/* ---------- Cena SVG ---------- */
+.pl-scene { width: var(--pl-scene-w); height: auto; display: block; overflow: visible; }
+.pl-bp { fill: none; stroke: var(--pl-blue); stroke-width: 1.1; stroke-linecap: square; opacity: 0; }
+.pl-bp path { stroke-dasharray: 1; stroke-dashoffset: 1; }
+.pl-found { fill: var(--pl-yellow); }
+.pl-brick { fill: var(--pl-brick); }
+.pl-brick.b2 { fill: #a84a33; }
+.pl-brick.b3 { fill: #c05e43; }
+.pl-mortar { fill: #d8cfc0; }
+
+/* ---------- Logo (imagem real, nunca redesenhada) ---------- */
+.pl-logo {
+  position: relative; width: var(--pl-logo-w); aspect-ratio: 900 / 268;
+  opacity: 0; --p: 0; --q: 0; --s: -30;
+  transform-origin: 50% 50%;
+}
+.pl-logo__layer, .pl-logo__layer > div { position: absolute; inset: 0; }
+.pl-logo img { display: block; width: 100%; height: 100%; object-fit: contain; user-select: none; -webkit-user-drag: none; }
+
+/* camada 1: símbolo + letras (a faixa do slogan fica de fora) — revelada da esquerda p/ direita por --p */
+.pl-logo__main { clip-path: inset(0 calc(100% - var(--p) * 1%) 0 0); }
+.pl-logo__main > div { clip-path: polygon(0 0, 100% 0, 100% 76.5%, 30.2% 76.5%, 30.2% 100%, 0 100%); }
+/* camada 2: somente a faixa do slogan — revelada depois por --q */
+.pl-logo__slogan { clip-path: inset(76.5% calc(100% - var(--q) * 1%) 0 30.2%); }
+/* camada 3: o MESMO logo mais claro, recortado numa faixa inclinada que varre da esquerda p/ direita */
+.pl-logo__shine { pointer-events: none; opacity: .0; }
+.pl-logo__shine > div {
+  clip-path: polygon(calc(var(--s) * 1% - 6%) 0, calc(var(--s) * 1% + 6%) 0,
+                     calc(var(--s) * 1% - 2%) 100%, calc(var(--s) * 1% - 14%) 100%);
+}
+.pl-logo__shine img { filter: brightness(1.9) saturate(.55) contrast(.95); }
+/* borda amarela de luz na frente da revelação */
+.pl-logo__edge {
+  position: absolute; top: 4%; bottom: 4%; left: calc(var(--p) * 1%);
+  width: 2px; margin-left: -1px; border-radius: 2px; opacity: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent, var(--pl-yellow) 18%, var(--pl-yellow) 82%, transparent);
+  box-shadow: 0 0 10px 1px rgba(239, 196, 67, .55), 0 0 26px 4px rgba(239, 196, 67, .22);
+}
+.pl-logo.is-missing { display: none; }
+
+/* ---------- Status: texto + barra + porcentagem ---------- */
+.pl-status {
+  display: grid; justify-items: center; gap: 12px; opacity: 0;
+  min-height: 64px;
+}
+.pl-text {
+  margin: 0; font-size: clamp(10px, 1.05vw + 6px, 13px); font-weight: 600;
+  letter-spacing: .24em; text-transform: uppercase; color: var(--pl-text);
+  text-align: center; opacity: 0;
+}
+.pl-bar { position: relative; width: var(--pl-bar-w); height: 3px; border-radius: 3px; background: rgba(255, 255, 255, .12); overflow: hidden; }
+.pl-bar__fill {
+  position: absolute; inset: 0; --b: 0; border-radius: 3px;
+  background: linear-gradient(90deg, var(--pl-yellow) 0%, var(--pl-yellow) 28%, var(--pl-red) 64%, var(--pl-blue) 100%);
+  clip-path: inset(0 calc(100% - var(--b) * 1%) 0 0);
+}
+.pl-pct { font-size: 12px; font-weight: 700; letter-spacing: .14em; color: #fff; font-variant-numeric: tabular-nums; min-width: 4ch; text-align: center; }
+
+/* ---------- Mobile: menos elementos, mesma narrativa ---------- */
+@media (max-width: 560px) {
+  #preloader { --pl-scene-w: min(88vw, 400px); --pl-logo-w: min(80vw, 380px); }
+  .pl-sm-hide { display: none; }
+  .pl-grid { background-size: 40px 40px; }
+}
+@media (max-height: 420px) { .pl-text { display: none; } .pl-stage { gap: 12px; } }
+
+/* ---------- Movimento reduzido: logo estático e saída por fade ---------- */
+#preloader.is-static .pl-scene, #preloader.is-static .pl-status, #preloader.is-static .pl-grid { display: none; }
+#preloader.is-static .pl-logo { opacity: 1; --p: 100; --q: 100; }
+#preloader.is-static .pl-logo__edge { display: none; }
+#preloader.is-static.is-leaving { opacity: 0; transition: opacity .45s ease; }
