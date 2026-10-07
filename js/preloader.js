@@ -178,13 +178,13 @@
   function stageProgress(tl) {
     const steps = CONFIG.steps;
     const marks = [0.4, 0.9, 1.7, 2.3, 3.0, 3.7, T.full];     // instante em que cada porcentagem é atingida
-    tl.to(L.status, { opacity: 1, duration: 0.1 }, marks[0]);
+    tl.to(L.status, { opacity: 1, duration: 0.4 }, marks[0]);
     for (let i = 1; i < steps.length; i++) {
       const a = marks[Math.min(i - 1, marks.length - 1)], b = marks[Math.min(i, marks.length - 1)];
       tl.to(L.fill, { "--b": steps[i], duration: b - a, ease: "power1.inOut" }, a)
         .call(() => { L.pct.textContent = steps[i] + "%"; }, null, b);
     }
-    tl.to(L.text, { opacity: 1, duration: 0.8 }, T.text - 0.8);
+    tl.to(L.text, { opacity: 1, duration: 0.3 }, T.text - 0.1);
   }
 
   /* espera a página terminar de carregar (no máximo maxExtraWait) antes de passar dos ~84% */
@@ -200,9 +200,9 @@
 
   /* 10 — texto e barra somem, logo segura ~hold, escala 1→1.03 e as portas abrem na vertical */
   function stageExit(tl) {
-    const t = T.full + 0.01;
-    const tDoors = t + 0.12 + CONFIG.hold;
-    tl.to([L.text, L.bar, L.pct], { opacity: 0, y: 6, duration: 0.8, ease: "power1.in" }, t)
+    const t = T.full + 0.02;
+    const tDoors = t + 0.18 + CONFIG.hold;
+    tl.to([L.text, L.bar, L.pct], { opacity: 0, y: 6, duration: 0.18, ease: "power1.in" }, t)
       .to(L.status, { opacity: 0, duration: 0.2 }, t + 0.05)
       .to(L.box, { scale: 1.03, duration: CONFIG.hold + 0.25, ease: "power1.inOut" }, tDoors - CONFIG.hold)
       .to(q(".pl-stage"), { opacity: 0, duration: 0.3, ease: "power1.in" }, tDoors + 0.08)

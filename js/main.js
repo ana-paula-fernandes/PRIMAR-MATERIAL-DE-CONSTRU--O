@@ -384,7 +384,7 @@ const CONFIG = {
       gsap.fromTo(img, { scale: 1.3 }, { scale: 1, duration: 2, ease: "power3.out", scrollTrigger: st });
       gsap.fromTo(img, { yPercent: -5 }, { yPercent: 5, ease: "none", force3D: true,
         scrollTrigger: { trigger: box, start: "top bottom", end: "bottom top", scrub: true } });
-      const host = box.closest(".heavy__media, .delivery__media, .location__media");
+      const host = box.closest(".heavy__media, .delivery__media, .entulho__media, .location__media");
       if (host) gsap.fromTo(host, { "--sh": 0 }, { "--sh": 1, duration: 1.4, ease: "power2.out", scrollTrigger: st });
     });
 

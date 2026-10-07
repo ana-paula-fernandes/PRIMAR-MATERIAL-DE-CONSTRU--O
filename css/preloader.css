@@ -7,10 +7,10 @@
    ========================================================= */
 #preloader {
   /* cores */
-  --pl-bg: #0a1230;            /* azul-marinho do palco */
-  --pl-bg-2: #131f4d;          /* centro do degradê */
+  --pl-bg: #080a39;            /* azul-marinho do palco */
+  --pl-bg-2: #141a5e;          /* centro do degradê */
   --pl-yellow: #efc443;        /* fundação, brilho, barra */
-  --pl-red: #d6394b;           /* barra */
+  --pl-red: #d90b24;           /* barra */
   --pl-blue: #4a56e0;          /* planta (blueprint) e barra */
   --pl-brick: #b4533a;         /* tijolos (terracota) */
   --pl-text: rgba(255, 255, 255, .78);
