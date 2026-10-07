@@ -725,6 +725,18 @@ h2 {
   .perks .perk:last-child h3 { text-align: left; }
 }
 
+@media (max-width: 431px) {
+  .steps .title-block--center > .square { display: none; }
+  .steps .title-block--center > h2[data-split] {
+    flex: 1;
+    text-align: left !important;
+  }
+  .steps h2[data-split] > br { display: none; }
+  .steps h2[data-split] .split-line-mask,
+  .steps h2[data-split] .split-line { display: inline !important; text-align: left !important; }
+  .steps h2[data-split] .split-line-mask::after { content: " "; }
+}
+
 @media (max-width: 480px) {
   .pay-card__icon { width: 60px; height: 60px; }
   .pay-card__icon .i { width: 26px; height: 26px; }
